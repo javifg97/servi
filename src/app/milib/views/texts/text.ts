@@ -23,12 +23,6 @@ export class Text extends View{
 
     }
 
-/*
-
-    public initFinish():void{
-        this.setTextAttrs("center","middle");
-    }
-*/
     /**
      * Setea el color de fondo de label
      * @param vsColor
@@ -114,5 +108,9 @@ export class Text extends View{
      */
     public setTexto(vtexto:string){
         this.sTexto=vtexto;
+    }
+    public getTexto():string{
+        let st:string = this.sTexto;
+        return st;
     }
 }

@@ -18,22 +18,18 @@ export class Actividad1 implements EventsAdminListener{
     private btnSalir:Button;
     private window:Window;
     private arParejas:Array<string[]>;
-    private piezaAuxDc1:Pieza;
-    private piezaAuxIz1:Pieza;
-    private piezaAuxDc2:Pieza;
-    private piezaAuxIz2:Pieza;
-    private piezaAuxDc3:Pieza;
-    private piezaAuxIz3:Pieza;
+    private piezaDc1:Pieza;
+    private piezaIz1:Pieza;
+    private piezaDc2:Pieza;
+    private piezaIz2:Pieza;
+    private piezaDc3:Pieza;
+    private piezaIz3:Pieza;
     private mainGameImg:Imagen;
-    //private arPreguntas:string[];
-    //private arRespuestas:Array<string[]>;
-    //private arRespuestasCorrectas:String[];
-    //private btnRes1:Button;
-    //private btnRes2:Button;
-    //private btnRes3:Button;
-    //private btnRes4:Button;
-    //private lblPregunta:Text;
-    //private contador:number;
+    private posPareja1:number=-1;
+    private posPareja2:number=-1;
+    private posPrimera:number=-1;
+    private posSegunda:number=-1;
+
 
 
     constructor(vMotor:Motor){
@@ -45,7 +41,7 @@ export class Actividad1 implements EventsAdminListener{
         this.window.btnSalir.setListener(this);
         this.crearEscenarioMenu();
         this.crearEscenarioJuego();
-        this.contador = -1;
+        //this.contador = -1;
 
 
 
@@ -91,25 +87,34 @@ export class Actividad1 implements EventsAdminListener{
     private crearEscenarioJuego():void{
         // PIEZAS
         this.arParejas= new Array<string[]>();
-        this.piezaAuxIz1 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "iz");
-        this.piezaAuxDc1 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "dc");
-        this.motor.addViewToParentView(this.window, this.piezaAuxDc1);
-        this.motor.addViewToParentView(this.window, this.piezaAuxIz1);
+        this.piezaIz1 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "iz");
+        this.piezaDc1 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "dc");
+        this.motor.addViewToParentView(this.window, this.piezaIz1);
+        this.motor.addViewToParentView(this.window, this.piezaDc1);
+        
+        this.piezaIz1.setListener(this);
+        this.piezaDc1.setListener(this);
 
-        this.piezaAuxIz2 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "iz");
-        this.piezaAuxDc2 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "dc");
-        this.motor.addViewToParentView(this.window, this.piezaAuxDc2);
-        this.motor.addViewToParentView(this.window, this.piezaAuxDc2);
+        this.piezaIz2 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "iz");
+        this.piezaDc2 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "dc");
+        this.motor.addViewToParentView(this.window, this.piezaIz2);
+        this.motor.addViewToParentView(this.window, this.piezaDc2);
+        
+        this.piezaIz2.setListener(this);
+        this.piezaDc2.setListener(this);
 
-        this.piezaAuxIz3 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "iz");
-        this.piezaAuxDc3 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "dc");
-        this.motor.addViewToParentView(this.window, this.piezaAuxDc3);
-        this.motor.addViewToParentView(this.window, this.piezaAuxDc3);
+        this.piezaIz3 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "iz");
+        this.piezaDc3 = new Pieza(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3, "dc");
+        this.motor.addViewToParentView(this.window, this.piezaIz3);
+        this.motor.addViewToParentView(this.window, this.piezaDc3);
+
+        this.piezaIz3.setListener(this);
+        this.piezaDc3.setListener(this);
 
         this.mainGameImg=new Imagen(this.motor,0,0,DataHolder.instance.nScreenWidth,DataHolder.instance.nScreenHeight);
         this.mainGameImg.setImg('./assets/mainGameImg.jpg');
         this.motor.addViewToParentView(this.window, this.mainGameImg);
-        //piezaAuxIz.setImagePath
+        
 
 
         //RESPUESTAS
@@ -121,35 +126,32 @@ export class Actividad1 implements EventsAdminListener{
         arrAux = ["13 min","0 min"];
         this.arParejas[2] = arrAux;
 
-        //RELLENAR WINDOW
+        for (var i = 0; i < this.arParejas.length; i++) {
+            let random:number = Math.floor(Math.random() * 3) + 1
+            if (random == 1) {
+                
+                this.piezaIz1.setTexto(this.arParejas[i][0]);
 
-        this.btnRes1=new Button(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3);
-        this.motor.addViewToParentView(this.window, this.btnRes1);
-        this.btnRes1.setImagePath('./assets/images.png');
-        this.btnRes1.setTexto("");
-        this.btnRes1.setListener(this);
+            }else if (random == 2) {
+                this.piezaIz2.setTexto(this.arParejas[i][0]);
+            }else if (random == 3) {
+                this.piezaIz3.setTexto(this.arParejas[i][0]);
+            }
+        }
 
-        this.btnRes2=new Button(this.motor,DataHolder.instance.nScreenWidth*0.2,DataHolder.instance.nScreenHeight*0.75,this.panelMenu.w/3,this.panelMenu.h/3);
-        this.motor.addViewToParentView(this.window, this.btnRes2);
-        this.btnRes2.setImagePath('./assets/images.png');
-        this.btnRes2.setTexto("");
-        this.btnRes2.setListener(this);
+        for (var i = 0; i < this.arParejas.length; i++) {
+            let random:number = Math.floor(Math.random() * 3) + 1
+            if (random == 1) {
+                this.piezaDc1.setTexto(this.arParejas[i][1]);
+            }else if (random == 2) {
+                this.piezaDc2.setTexto(this.arParejas[i][1]);
+            }else if (random == 3) {
+                this.piezaDc3.setTexto(this.arParejas[i][1]);
+            }
+        }
 
-        this.btnRes3=new Button(this.motor,DataHolder.instance.nScreenWidth*0.65,DataHolder.instance.nScreenHeight*0.55,this.panelMenu.w/3,this.panelMenu.h/3);
-        this.motor.addViewToParentView(this.window, this.btnRes3);
-        this.btnRes3.setImagePath('./assets/images.png');
-        this.btnRes3.setTexto("");
-        this.btnRes3.setListener(this);
 
-        this.btnRes4=new Button(this.motor,DataHolder.instance.nScreenWidth*0.65,DataHolder.instance.nScreenHeight*0.75,this.panelMenu.w/3,this.panelMenu.h/3);
-        this.motor.addViewToParentView(this.window, this.btnRes4);
-        this.btnRes4.setImagePath('./assets/images.png');
-        this.btnRes4.setTexto("");
-        this.btnRes4.setListener(this);
-
-        this.lblPregunta=new Text(this.motor, this.panelMenu.w/3,0,this.panelMenu.w/3,this.panelMenu.h/3);
-        this.motor.addViewToParentView(this.window, this.lblPregunta);
-        this.lblPregunta.setTexto("");
+        
 
 
 
@@ -160,8 +162,25 @@ export class Actividad1 implements EventsAdminListener{
         console.log("SE HA ACTUALIZADO EL TEMAÑO DE LA PANTALLA");
       }
 
-    buttonListenerOnClick?(btn:Button):void{
-        if(btn == this.btnInicio){
+      piezaListenerOnClick?(pz:Pieza):void{
+        if(pz == this.piezaDc1){
+            for (var i = 0; i < this.arParejas.length; i++) {
+                
+                    var capa:string =  this.piezaDc1.getTexto();
+                    var posAux:number = this.arParejas[i].indexOf(capa)
+                if (this.posPrimera < 0 && posAux != -1) {
+                    this.posPrimera = posAux;
+                    this.posPareja1 = i;
+                }else if(this.posPrimera !< 0 && posAux != -1){
+                    this.posSegunda = posAux;
+                    this.posPareja2 = i;
+                    //Crear metodo para comprobar si 
+                    this.comprobar();
+                }
+                
+                
+            }
+            
             this.contador = 0;
             this.motor.setViewVisibility(this.panelMenu.uid,false);
             this.motor.setViewVisibility(this.window.uid,true);
@@ -219,4 +238,5 @@ export class Actividad1 implements EventsAdminListener{
 
 
     }
+}
 }
